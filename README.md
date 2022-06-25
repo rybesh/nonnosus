@@ -1,4 +1,4 @@
-# Reasoning about relative times of events in the life of Nonnsus
+# Reasoning about relative times of events in the life of Nonnosus
 
 In the altar of the parish church in Molzbichl there is a tombstone with the only inscription in Austria from the 6th century. The Latin inscription [reads](https://de.wikipedia.org/wiki/Nonnosus)
 
