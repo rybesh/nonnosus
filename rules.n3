@@ -4,6 +4,8 @@
 @prefix string: <http://www.w3.org/2000/10/swap/string#> .
 @prefix time: <http://www.w3.org/2006/time#> .
 
+# If an interval is inside (bounded by) another interval (the bounding
+# interval), then the bounding interval has a beginning and an end.
 {
     ?i time:intervalIn ?bounds .
 
@@ -12,46 +14,9 @@
     ?bounds time:hasEnd [] .
 } .
 
-{
-    ?i
-      rdfs:label ?label ;
-      time:hasBeginning ?b ;
-      time:hasEnd ?e .
-
-    ( "beginning of " ?label ) string:concatenation ?b_label .
-    ( "end of " ?label ) string:concatenation ?e_label .
-
-} => {
-     ?b rdfs:label ?b_label .
-     ?e rdfs:label ?e_label .
-} .
-
-{
-    ?i
-      rdfs:label ?label ;
-      time:intervalIn [
-        time:hasBeginning [ time:inDateTime ?b_d ]
-      ] .
-
-    ( "earliest date of the " ?label ) string:concatenation ?b_d_label .
-
-} => {
-     ?b_d rdfs:label ?b_d_label .
-} .
-
-{
-    ?i
-      rdfs:label ?label ;
-      time:intervalIn [
-        time:hasEnd [ time:inDateTime ?e_d ]
-      ] .
-
-    ( "latest date of the " ?label ) string:concatenation ?e_d_label .
-
-} => {
-     ?e_d rdfs:label ?e_d_label .
-} .
-
+# If a dated interval is inside (bounded by) another interval (the
+# bounding interval), the beginning and the end of the bounding
+# interval can also be dated.
 {
     ?i
       time:hasDateTimeDescription ?i_d ;
@@ -65,6 +30,9 @@
     ?bounds_e time:inDateTime [] .
 } .
 
+# If a dated interval is inside (bounded by) another interval (the
+# bounding interval), the dates of the beginning and the end of the
+# bounding interval have the same day as the dated interval.
 {
     ?i
       time:intervalIn ?bounds ;
@@ -79,6 +47,9 @@
     ?c_e_d time:day ?d .
 } .
 
+# If a dated interval is inside (bounded by) another interval (the
+# bounding interval), the dates of the beginning and the end of the
+# bounding interval have the same month as the dated interval.
 {
     ?i
       time:intervalIn ?bounds ;
@@ -93,6 +64,10 @@
     ?c_e_d time:month ?m .
 } .
 
+# If a dated interval is inside (bounded by) another interval (the
+# bounding interval), and the dated interval must have occurred before
+# another interval, the bounding interval also must have occurred
+# before that other interval.
 {
     ?i1
       time:before ?i2 ;
@@ -102,7 +77,10 @@
     ?i1_bounds time:before ?i2 .
 } .
 
-
+# If a dated interval occurred before another dated interval, and the
+# month of the earlier interval is greater than the month of the later
+# interval, then year of the earlier interval is at most one less than
+# the year of the later interval.
 {
     ?i1 time:before ?i2 .
 
@@ -125,6 +103,10 @@
     ?i1_e_d time:year ?i1_e_year .
 } .
 
+# If a dated interval occurred before another dated interval, and the
+# month of the earlier interval is less than the month of the later
+# interval, then year of the earlier interval is at most the same as
+# the year of the later interval.
 {
     ?i1 time:before ?i2 .
 
@@ -145,6 +127,11 @@
     ?i1_e_d time:year ?i2_year .
 } .
 
+# If a dated interval occurred before another dated interval, and the
+# month of the earlier interval is the same as the month of the later
+# interval, and the day of the earlier interval is greater than the
+# day of the later interval, then year of the earlier interval is at
+# most one less than the year of the later interval.
 {
     ?i1 time:before ?i2 .
 
@@ -171,6 +158,11 @@
     ?i1_e_d time:year ?i1_e_year .
 } .
 
+# If a dated interval occurred before another dated interval, and the
+# month of the earlier interval is the same as the month of the later
+# interval, and the day of the earlier interval is not greater than
+# the day of the later interval, then year of the earlier interval is
+# at most the same as the year of the later interval.
 {
     ?i1 time:before ?i2 .
 
@@ -195,6 +187,10 @@
     ?i1_e_d time:year ?i2_year .
 } .
 
+# If an interval has a known duration in years, and the maximum
+# temporal bound on the finish of the interval is dated, the a date for
+# the maximum temporal bound of the start of the interval can be
+# inferred.
 {
     ?i
       time:intervalStartedBy ?s ;
@@ -225,6 +221,9 @@
     ] .
 } .
 
+# If an interval has a known duration in years, and the year of start
+# of the interval is known, then the year of the finish of interval
+# can be inferred.
 {
     ?i
       time:intervalStartedBy ?s ;
@@ -243,4 +242,47 @@
 
 } => {
     ?f_d time:year ?f_y .
+} .
+
+# Label the beginnings and ends of intervals.
+{
+    ?i
+      rdfs:label ?label ;
+      time:hasBeginning ?b ;
+      time:hasEnd ?e .
+
+    ( "beginning of " ?label ) string:concatenation ?b_label .
+    ( "end of " ?label ) string:concatenation ?e_label .
+
+} => {
+     ?b rdfs:label ?b_label .
+     ?e rdfs:label ?e_label .
+} .
+
+# Label the dates of the beginnings of intervals.
+{
+    ?i
+      rdfs:label ?label ;
+      time:intervalIn [
+        time:hasBeginning [ time:inDateTime ?b_d ]
+      ] .
+
+    ( "earliest date of the " ?label ) string:concatenation ?b_d_label .
+
+} => {
+     ?b_d rdfs:label ?b_d_label .
+} .
+
+# Label the dates of the ends of intervals.
+{
+    ?i
+      rdfs:label ?label ;
+      time:intervalIn [
+        time:hasEnd [ time:inDateTime ?e_d ]
+      ] .
+
+    ( "latest date of the " ?label ) string:concatenation ?e_d_label .
+
+} => {
+     ?e_d rdfs:label ?e_d_label .
 } .
