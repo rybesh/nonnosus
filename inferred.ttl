@@ -1,0 +1,73 @@
+@prefix :       <https://example.org/nonnosus/> .
+@prefix edtfo:  <https://example.org/nonnosus/edtfo.ttl#> .
+@prefix math:   <http://www.w3.org/2000/10/swap/math#> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix string: <http://www.w3.org/2000/10/swap/string#> .
+@prefix time:   <http://www.w3.org/2006/time#> .
+
+:life   rdfs:label                   "life of Nonnosus" ;
+        time:hasDurationDescription  [ rdfs:label  "duration of life of Nonnosus" ;
+                                       time:years  103
+                                     ] ;
+        time:intervalFinishedBy      :death ;
+        time:intervalStartedBy       :birth .
+
+:birth  rdfs:label       "birth of Nonnosus" ;
+        time:before      :death ;
+        time:intervalIn  :birthBounds .
+
+:death  rdfs:label                   "death of Nonnosus" ;
+        time:before                  :burial ;
+        time:hasDateTimeDescription  [ rdfs:label  "date of death of Nonnosus" ;
+                                       time:day    2 ;
+                                       time:month  9
+                                     ] ;
+        time:intervalIn              :deathBounds .
+
+:consulate  rdfs:label               "consulate of Lampadius and Orestes" ;
+        time:hasDateTimeDescription  [ rdfs:label  "date of consulate of Lampadius and Orestes" ;
+                                       time:year   530
+                                     ] .
+
+:relativeYearOfBurial
+        rdfs:label                   "time elapsed between the consulate and the burial of Nonnosus" ;
+        time:hasDurationDescription  [ rdfs:label  "three years (inclusive of the year of the consulate)" ;
+                                       time:years  2
+                                     ] ;
+        time:intervalFinishedBy      :burial ;
+        time:intervalStartedBy       :consulate .
+
+:birthBounds  rdfs:label   "temporal bounds on the birth of Nonnosus" ;
+        time:before        :death ;
+        time:hasBeginning  [ rdfs:label  "beginning of temporal bounds on the birth of Nonnosus" ] ;
+        time:hasEnd        [ rdfs:label       "end of temporal bounds on the birth of Nonnosus" ;
+                             time:inDateTime  [ rdfs:label  "latest date of the birth of Nonnosus" ;
+                                                time:day    2 ;
+                                                time:month  9 ;
+                                                time:year   428
+                                              ]
+                           ] .
+
+:burial  rdfs:label                  "burial of Nonnosus" ;
+        time:hasDateTimeDescription  [ rdfs:label  "date of burial of Nonnosus" ;
+                                       time:day    20 ;
+                                       time:month  7 ;
+                                       time:year   532
+                                     ] .
+
+:deathBounds  rdfs:label   "temporal bounds on the death of Nonnosus" ;
+        time:before        :burial ;
+        time:hasBeginning  [ rdfs:label       "beginning of temporal bounds on the death of Nonnosus" ;
+                             time:inDateTime  [ rdfs:label  "earliest date of the death of Nonnosus" ;
+                                                time:day    2 ;
+                                                time:month  9
+                                              ]
+                           ] ;
+        time:hasEnd        [ rdfs:label       "end of temporal bounds on the death of Nonnosus" ;
+                             time:inDateTime  [ rdfs:label  "latest date of the death of Nonnosus" ;
+                                                time:day    2 ;
+                                                time:month  9 ;
+                                                time:year   531
+                                              ]
+                           ] .

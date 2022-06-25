@@ -1,0 +1,246 @@
+@prefix math: <http://www.w3.org/2000/10/swap/math#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix string: <http://www.w3.org/2000/10/swap/string#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+
+{
+    ?i time:intervalIn ?bounds .
+
+} => {
+    ?bounds time:hasBeginning [] .
+    ?bounds time:hasEnd [] .
+} .
+
+{
+    ?i
+      rdfs:label ?label ;
+      time:hasBeginning ?b ;
+      time:hasEnd ?e .
+
+    ( "beginning of " ?label ) string:concatenation ?b_label .
+    ( "end of " ?label ) string:concatenation ?e_label .
+
+} => {
+     ?b rdfs:label ?b_label .
+     ?e rdfs:label ?e_label .
+} .
+
+{
+    ?i
+      rdfs:label ?label ;
+      time:intervalIn [
+        time:hasBeginning [ time:inDateTime ?b_d ]
+      ] .
+
+    ( "earliest date of the " ?label ) string:concatenation ?b_d_label .
+
+} => {
+     ?b_d rdfs:label ?b_d_label .
+} .
+
+{
+    ?i
+      rdfs:label ?label ;
+      time:intervalIn [
+        time:hasEnd [ time:inDateTime ?e_d ]
+      ] .
+
+    ( "latest date of the " ?label ) string:concatenation ?e_d_label .
+
+} => {
+     ?e_d rdfs:label ?e_d_label .
+} .
+
+{
+    ?i
+      time:hasDateTimeDescription ?i_d ;
+      time:intervalIn [
+        time:hasBeginning ?bounds_b ;
+        time:hasEnd ?bounds_e
+      ] .
+
+} => {
+    ?bounds_b time:inDateTime [] .
+    ?bounds_e time:inDateTime [] .
+} .
+
+{
+    ?i
+      time:intervalIn ?bounds ;
+      time:hasDateTimeDescription [ time:day ?d ] .
+
+    ?bounds
+      time:hasBeginning [ time:inDateTime ?c_b_d ] ;
+      time:hasEnd [ time:inDateTime ?c_e_d ] .
+
+} => {
+    ?c_b_d time:day ?d .
+    ?c_e_d time:day ?d .
+} .
+
+{
+    ?i
+      time:intervalIn ?bounds ;
+      time:hasDateTimeDescription [ time:month ?m ] .
+
+    ?bounds
+      time:hasBeginning [ time:inDateTime ?c_b_d ] ;
+      time:hasEnd [ time:inDateTime ?c_e_d ] .
+
+} => {
+    ?c_b_d time:month ?m .
+    ?c_e_d time:month ?m .
+} .
+
+{
+    ?i1
+      time:before ?i2 ;
+      time:intervalIn ?i1_bounds .
+
+} => {
+    ?i1_bounds time:before ?i2 .
+} .
+
+
+{
+    ?i1 time:before ?i2 .
+
+    ?i1 time:hasEnd [
+      time:inDateTime ?i1_e_d
+    ] .
+
+    ?i1_e_d time:month ?i1_e_month .
+
+    ?i2 time:hasDateTimeDescription [
+      time:month ?i2_month ;
+      time:year ?i2_year
+    ] .
+
+    ?i1_e_month math:greaterThan ?i2_month .
+
+    ( ?i2_year 1 ) math:difference ?i1_e_year .
+
+} => {
+    ?i1_e_d time:year ?i1_e_year .
+} .
+
+{
+    ?i1 time:before ?i2 .
+
+    ?i1 time:hasEnd [
+      time:inDateTime ?i1_e_d
+    ] .
+
+    ?i1_e_d time:month ?i1_e_month .
+
+    ?i2 time:hasDateTimeDescription [
+      time:month ?i2_month ;
+      time:year ?i2_year
+    ] .
+
+    ?i1_e_month math:lessThan ?i2_month .
+
+} => {
+    ?i1_e_d time:year ?i2_year .
+} .
+
+{
+    ?i1 time:before ?i2 .
+
+    ?i1 time:hasEnd [
+      time:inDateTime ?i1_e_d
+    ] .
+
+    ?i1_e_d
+      time:day ?i1_e_day ;
+      time:month ?i1_e_month .
+
+    ?i2 time:hasDateTimeDescription [
+      time:day ?i2_day ;
+      time:month ?i2_month ;
+      time:year ?i2_year
+    ] .
+
+    ?i1_e_month math:equalTo ?i2_month .
+    ?i1_e_day math:greaterThan ?i2_day .
+
+    ( ?i2_year 1 ) math:difference ?i1_e_year .
+
+} => {
+    ?i1_e_d time:year ?i1_e_year .
+} .
+
+{
+    ?i1 time:before ?i2 .
+
+    ?i1 time:hasEnd [
+      time:inDateTime ?i1_e_d
+    ] .
+
+    ?i1_e_d
+      time:day ?i1_e_day ;
+      time:month ?i1_e_month .
+
+    ?i2 time:hasDateTimeDescription [
+      time:day ?i2_day ;
+      time:month ?i2_month ;
+      time:year ?i2_year
+    ] .
+
+    ?i1_e_month math:equalTo ?i2_month .
+    ?i1_e_day math:notGreaterThan ?i2_day .
+
+} => {
+    ?i1_e_d time:year ?i2_year .
+} .
+
+{
+    ?i
+      time:intervalStartedBy ?s ;
+      time:intervalFinishedBy ?f ;
+      time:hasDurationDescription [
+        time:years ?years
+      ] .
+
+    ?s time:intervalIn ?s_bounds .
+    ?f time:intervalIn ?f_bounds .
+
+    ?f_bounds time:hasEnd ?f_e .
+    ?s_bounds time:hasEnd ?s_e .
+
+    ?f_e time:inDateTime  [
+      time:day ?f_e_d ;
+      time:month ?f_e_m ;
+      time:year ?f_e_y
+    ] .
+
+    ( ?f_e_y ?years ) math:difference ?s_e_y .
+
+} => {
+    ?s_e time:inDateTime [
+      time:day ?f_e_d ;
+      time:month ?f_e_m ;
+      time:year ?s_e_y
+    ] .
+} .
+
+{
+    ?i
+      time:intervalStartedBy ?s ;
+      time:intervalFinishedBy ?f ;
+      time:hasDurationDescription [
+        time:years ?years
+      ] .
+
+    ?s time:hasDateTimeDescription  [
+      time:year ?s_y
+    ] .
+
+    ?f time:hasDateTimeDescription ?f_d .
+
+    ( ?s_y ?years ) math:sum ?f_y .
+
+} => {
+    ?f_d time:year ?f_y .
+} .
